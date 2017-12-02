@@ -26,7 +26,7 @@ public class QueueManager : MonoBehaviour
 
         if (CustomersInQueue.Count > 0)
         {
-            CustomersInQueue[0].Leader = null;
+            CustomersInQueue[0].MoveTarget = null;
             StartCoroutine(ShuffleUpQueue());
         }
 
@@ -39,7 +39,7 @@ public class QueueManager : MonoBehaviour
 
         if (CustomersInQueue.Count > 0)
         {
-            CustomersInQueue[0].Leader = QueueStartPosition;
+            CustomersInQueue[0].MoveTarget = QueueStartPosition;
         }
     }
 
@@ -70,11 +70,11 @@ public class QueueManager : MonoBehaviour
 
         if (CustomersInQueue.Count == 0)
         {
-            NewCustomer.Leader = QueueStartPosition;
+            NewCustomer.MoveTarget = QueueStartPosition;
         }
         else
         {
-            NewCustomer.Leader = CustomersInQueue[CustomersInQueue.Count - 1].gameObject.transform;
+            NewCustomer.MoveTarget = CustomersInQueue[CustomersInQueue.Count - 1].gameObject.transform;
         }
 
         CustomersInQueue.Add(NewCustomer);
