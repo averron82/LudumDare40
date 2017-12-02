@@ -85,10 +85,10 @@ MonoBehaviour:
   MoodAdjustFollowingWaiterToTable: -0.1
   MoodAdjustAtTable: 0
   MoveSpeed: 1
-  Leader: {fileID: 0}
+  MoveTarget: {fileID: 0}
+  AtTable: {fileID: 0}
   StartFollowDistance: 0.6
   StopFollowDistance: 0.5
-  CurrentState: 0
 --- !u!212 &212585629392003264
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -123,7 +123,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 78dbece567a16dd4e9e9cf2c208c7df2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0a17d861f381b7345ac1ebbe74a40620, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
