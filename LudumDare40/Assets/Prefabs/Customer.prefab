@@ -83,12 +83,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoodAdjustWaitingToBeSeated: -1
   MoodAdjustFollowingWaiterToTable: -0.1
-  MoodAdjustAtTable: 0
-  MoveSpeed: 1
-  Leader: {fileID: 0}
-  StartFollowDistance: 0.6
-  StopFollowDistance: 0.5
-  CurrentState: 0
+  MoodAdjustConsideringOrder: 0
+  MoodAdjustWaitingToPlaceOrder: -0.1
+  MoodAdjustWaitingForMeal: -0.1
+  MoodAdjustEatingMeal: 0
+  MoveSpeed: 0.6
+  MoveTarget: {fileID: 0}
+  AtTable: {fileID: 0}
+  PlusOne: {fileID: 0}
+  StartFollowDistance: 0.3
+  StopFollowDistance: 0.25
 --- !u!212 &212585629392003264
 SpriteRenderer:
   m_ObjectHideFlags: 1

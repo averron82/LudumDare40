@@ -77,6 +77,7 @@ public class Waiter : MonoBehaviour
             if (DistanceSq <= NearestDistSq)
             {
                 NearestTable = T;
+                NearestDistSq = DistanceSq;
             }
         }
 
@@ -86,9 +87,18 @@ public class Waiter : MonoBehaviour
             Customer C = Follower.GetComponent<Customer>();
             C.MoveTarget = NearestTable.Chair0;
             C.StartFollowDistance = 0.1f;
-            C.StopFollowDistance = 0.05f;
-            C.SetState(CustomerState.AtTable);
+            C.StopFollowDistance = 0.01f;
+            C.SetState(CustomerState.ConsideringOrder);
             C.AtTable = NearestTable;
+
+            if (C.PlusOne)
+            {
+                C.PlusOne.MoveTarget = NearestTable.Chair1;
+                C.PlusOne.StartFollowDistance = 0.1f;
+                C.PlusOne.StopFollowDistance = 0.01f;
+                C.PlusOne.AtTable = NearestTable;
+            }
+
             NearestTable.Occupied = true;
             Follower = null;
         }

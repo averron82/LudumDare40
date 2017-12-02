@@ -6,20 +6,29 @@ public enum CustomerState
 {
     WaitingToBeSeated,
     FollowingWaiterToTable,
-    AtTable,
-    Leaving
+    ConsideringOrder,
+    WaitingToPlaceOrder,
+    WaitingForMeal,
+    EatingMeal,
+    Leaving,
+
+    PlusOne
 };
 
 public class Customer : MonoBehaviour
 {
     public float MoodAdjustWaitingToBeSeated = -0.1f;
     public float MoodAdjustFollowingWaiterToTable = -0.1f;
-    public float MoodAdjustAtTable = 0.0f;
+    public float MoodAdjustConsideringOrder = 0.0f;
+    public float MoodAdjustWaitingToPlaceOrder = -0.1f;
+    public float MoodAdjustWaitingForMeal = -0.1f;
+    public float MoodAdjustEatingMeal = 0.0f;
 
     public float MoveSpeed = 1.0f;
 
     public Transform MoveTarget;
     public Table AtTable;
+    public Customer PlusOne;
 
     public float StartFollowDistance = 1.0f;
     public float StopFollowDistance = 0.5f;
@@ -33,9 +42,19 @@ public class Customer : MonoBehaviour
     {
         CurrentState = State;
 
-        if (CurrentState == CustomerState.AtTable)
+        if (CurrentState == CustomerState.ConsideringOrder)
         {
-            StartCoroutine(GoToExit());
+            StartCoroutine(WantToPlaceOrder());
+        }
+    }
+
+    void Start()
+    {
+        if ((CurrentState != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
+        {
+            PlusOne = Instantiate(this, transform.position, Quaternion.identity);
+            PlusOne.MoveTarget = transform;
+            PlusOne.CurrentState = CustomerState.PlusOne;
         }
     }
 
@@ -87,14 +106,36 @@ public class Customer : MonoBehaviour
                 Mood += MoodAdjustFollowingWaiterToTable * Time.deltaTime;
                 break;
             }
-            case CustomerState.AtTable:
+            case CustomerState.ConsideringOrder:
             {
-                Mood += MoodAdjustAtTable * Time.deltaTime;
+                Mood += MoodAdjustConsideringOrder * Time.deltaTime;
+                break;
+            }
+            case CustomerState.WaitingToPlaceOrder:
+            {
+                Mood += MoodAdjustWaitingToPlaceOrder * Time.deltaTime;
+                break;
+            }
+            case CustomerState.WaitingForMeal:
+            {
+               Mood += MoodAdjustWaitingForMeal * Time.deltaTime;
+               break;
+            }
+            case CustomerState.EatingMeal:
+            {
+                Mood += MoodAdjustEatingMeal * Time.deltaTime;
                 break;
             }
         }
 
         Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
+    }
+
+    IEnumerator WantToPlaceOrder()
+    {
+        yield return new WaitForSeconds(10.0f);
+
+        SetState(CustomerState.WaitingToPlaceOrder);
     }
 
     IEnumerator GoToExit()
