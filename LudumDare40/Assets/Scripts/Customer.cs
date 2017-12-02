@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum CustomerState
@@ -8,6 +7,7 @@ public enum CustomerState
     FollowingWaiterToTable,
     ConsideringOrder,
     WaitingToPlaceOrder,
+    PlacingOrder,
     WaitingForMeal,
     EatingMeal,
     Leaving,
@@ -36,7 +36,7 @@ public class Customer : MonoBehaviour
     CustomerState CurrentState = CustomerState.WaitingToBeSeated;
     float Mood = 100.0f;
 
-    bool DoFollow = false;
+    bool ShouldMove = false;
 
     public void SetState(CustomerState State)
     {
@@ -44,18 +44,28 @@ public class Customer : MonoBehaviour
 
         if (CurrentState == CustomerState.ConsideringOrder)
         {
-            StartCoroutine(WantToPlaceOrder());
+            StartCoroutine(WantToPlaceOrder(Random.Range(10.0f, 20.0f)));
         }
+    }
+
+    public CustomerState GetState()
+    {
+        return CurrentState;
     }
 
     void Start()
     {
         if ((CurrentState != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
         {
-            PlusOne = Instantiate(this, transform.position, Quaternion.identity);
-            PlusOne.MoveTarget = transform;
-            PlusOne.CurrentState = CustomerState.PlusOne;
+            SpawnPlusOne();
         }
+    }
+
+    void SpawnPlusOne()
+    {
+        PlusOne = Instantiate(this, transform.position, Quaternion.identity);
+        PlusOne.MoveTarget = transform;
+        PlusOne.CurrentState = CustomerState.PlusOne;
     }
 
     void Update()
@@ -77,14 +87,14 @@ public class Customer : MonoBehaviour
 
         if (DistanceSq >= (StartFollowDistance * StartFollowDistance))
         {
-            DoFollow = true;
+            ShouldMove = true;
         }
         else if (DistanceSq <= (StopFollowDistance * StopFollowDistance))
         {
-            DoFollow = false;
+            ShouldMove = false;
         }
 
-        if (DoFollow)
+        if (ShouldMove)
         {
             Vector3 Direction = ToMoveTarget.normalized;
             Position += Direction * MoveSpeed * Time.deltaTime;
@@ -131,9 +141,9 @@ public class Customer : MonoBehaviour
         Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
     }
 
-    IEnumerator WantToPlaceOrder()
+    IEnumerator WantToPlaceOrder(float Seconds)
     {
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(Seconds);
 
         SetState(CustomerState.WaitingToPlaceOrder);
     }
