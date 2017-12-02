@@ -32,16 +32,26 @@ public class Waiter : MonoBehaviour
         position.x += Horizontal * MoveSpeed * Time.deltaTime;
         position.y += Vertical * MoveSpeed * Time.deltaTime;
 
-        // Set speed to 1 for any movement.
-        bool movingHorizontally = Mathf.Abs(Horizontal) > 0.0f;
-        if (movingHorizontally || Mathf.Abs(Vertical) > 0.0f)
+        if (Horizontal < 0.0f)
+        {
+            if (!Flipped)
+            {
+                MySpriteRenderer.flipX = true;
+                Flipped = true;
+            }
+        }
+        else if (Horizontal > 0.0f)
+        {
+            if (Flipped)
+            {
+                MySpriteRenderer.flipX = false;
+                Flipped = false;
+            }
+        }
+
+        if (Horizontal != 0.0f || Vertical != 0.0f)
         {
             MyAnimator.SetFloat("Speed", 1.0f);
-
-            if (movingHorizontally)
-            {
-                gameObject.transform.localScale = new Vector2(Horizontal > 0.01f ? 1.0f : -1.0f, 1.0f);
-            }
         }
         else
         {
