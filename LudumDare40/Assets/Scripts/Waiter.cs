@@ -11,6 +11,18 @@ public class Waiter : MonoBehaviour
 
     public float ActivateDistance = 1.0f;
 
+    private Animator MyAnimator;
+
+    private SpriteRenderer MySpriteRenderer;
+
+    bool Flipped = false;
+
+    void Start()
+    {
+        MyAnimator = GetComponentInChildren<Animator>();
+        MySpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
+
     void Update()
     {
         float Vertical = Input.GetAxis("Vertical");
@@ -19,6 +31,23 @@ public class Waiter : MonoBehaviour
         Vector3 position = gameObject.transform.position;
         position.x += Horizontal * MoveSpeed * Time.deltaTime;
         position.y += Vertical * MoveSpeed * Time.deltaTime;
+
+        // Set speed to 1 for any movement.
+        bool movingHorizontally = Mathf.Abs(Horizontal) > 0.0f;
+        if (movingHorizontally || Mathf.Abs(Vertical) > 0.0f)
+        {
+            MyAnimator.SetFloat("Speed", 1.0f);
+
+            if (movingHorizontally)
+            {
+                gameObject.transform.localScale = new Vector2(Horizontal > 0.01f ? 1.0f : -1.0f, 1.0f);
+            }
+        }
+        else
+        {
+            MyAnimator.SetFloat("Speed", 0.0f);
+        }
+
         gameObject.transform.position = position;
 
         bool Activate = Input.GetButtonDown("Jump");
