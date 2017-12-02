@@ -19,11 +19,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4463647356072668}
-  - component: {fileID: 114582645413939552}
+  - component: {fileID: 114969924198625836}
+  - component: {fileID: 114397274351303946}
   m_Layer: 0
-  m_Name: QueueManager
+  m_Name: Queue
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -33,14 +34,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334189557055612}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114582645413939552
+--- !u!114 &114397274351303946
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -55,5 +56,15 @@ MonoBehaviour:
     type: 2}
   CustomerSpawnInterval: 8
   CustomerSpawnPosition: {fileID: 0}
-  QueueStartPosition: {fileID: 0}
-  CustomersInQueue: []
+  customers: []
+--- !u!114 &114969924198625836
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1334189557055612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c820f59f2c8e9db478171b6dbadc498d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

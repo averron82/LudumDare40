@@ -29,6 +29,7 @@ public class Customer : MonoBehaviour
     public Transform MoveTarget;
     public Table AtTable;
     public Customer PlusOne;
+    public SpriteRenderer Moodlet;
 
     public float StartFollowDistance = 1.0f;
     public float StopFollowDistance = 0.5f;
@@ -38,13 +39,35 @@ public class Customer : MonoBehaviour
 
     bool ShouldMove = false;
 
+    private Animator MyAnimator;
+    private SpriteRenderer MySpriteRenderer;
+    bool Flipped = false;
+
+    Interactive interactive;
+
     public void SetState(CustomerState State)
     {
         CurrentState = State;
 
-        if (CurrentState == CustomerState.ConsideringOrder)
+        switch (CurrentState)
         {
-            StartCoroutine(WantToPlaceOrder(Random.Range(10.0f, 20.0f)));
+            case CustomerState.ConsideringOrder:
+            {
+                StartCoroutine(WantToPlaceOrder(Random.Range(5.0f, 10.0f)));
+                break;
+            }
+            case CustomerState.WaitingToPlaceOrder:
+            {
+                Moodlet.enabled = true;
+                interactive.SetInteraction(PlaceOrder, ValidateInteraction);
+                break;
+            }
+            case CustomerState.PlacingOrder:
+            {
+                Moodlet.enabled = false;
+                interactive.SetInteraction(null);
+                break;
+            }
         }
     }
 
@@ -55,10 +78,17 @@ public class Customer : MonoBehaviour
 
     void Start()
     {
+        MyAnimator = GetComponentInChildren<Animator>();
+        MySpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        Moodlet.enabled = false;
+
         if ((CurrentState != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
         {
             SpawnPlusOne();
         }
+
+        interactive = GetComponent<Interactive>();
+
     }
 
     void SpawnPlusOne()
@@ -66,6 +96,16 @@ public class Customer : MonoBehaviour
         PlusOne = Instantiate(this, transform.position, Quaternion.identity);
         PlusOne.MoveTarget = transform;
         PlusOne.CurrentState = CustomerState.PlusOne;
+    }
+
+    void PlaceOrder(Waiter waiter)
+    {
+        SetState(CustomerState.PlacingOrder);
+    }
+
+    bool ValidateInteraction(Waiter waiter)
+    {
+        return !waiter.Follower;
     }
 
     void Update()
@@ -99,6 +139,29 @@ public class Customer : MonoBehaviour
             Vector3 Direction = ToMoveTarget.normalized;
             Position += Direction * MoveSpeed * Time.deltaTime;
             transform.position = Position;
+
+            if (Direction.x < 0.0f)
+            {
+                if (!Flipped)
+                {
+                    MySpriteRenderer.flipX = true;
+                    Flipped = true;
+                }
+            }
+            else if (Direction.x > 0.0f)
+            {
+                if (Flipped)
+                {
+                    MySpriteRenderer.flipX = false;
+                    Flipped = false;
+                }
+            }
+
+            MyAnimator.SetFloat("Speed", 1.0f);
+        }
+        else
+        {
+            MyAnimator.SetFloat("Speed", 0.0f);
         }
     }
 
@@ -152,7 +215,7 @@ public class Customer : MonoBehaviour
     {
         yield return new WaitForSeconds(10.0f);
 
-        AtTable.Occupied = false;
+        AtTable.SetAvailable();
         AtTable = null;
 
         GameObject Exit = GameObject.FindGameObjectWithTag("Exit");

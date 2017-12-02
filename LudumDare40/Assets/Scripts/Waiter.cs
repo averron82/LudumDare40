@@ -7,12 +7,10 @@ public class Waiter : MonoBehaviour
     public float MoveSpeed = 1.0f;
 
     public Transform Follower;
-    public Transform QueueStartPosition;
 
     public float ActivateDistance = 1.0f;
 
     private Animator MyAnimator;
-
     private SpriteRenderer MySpriteRenderer;
 
     bool Flipped = false;
@@ -60,130 +58,38 @@ public class Waiter : MonoBehaviour
 
         gameObject.transform.position = position;
 
-        bool Activate = Input.GetButtonDown("Jump");
-        if (Activate)
+        if (Input.GetButtonDown("Jump"))
         {
-            OnActivate();
+            Interact();
         }
     }
 
-    void OnActivate()
+    bool Interact()
     {
-        if (Follower)
-        {
-            AttemptToSeatFollower();
-        }
-        else
-        {
-            if (TakeOrder())
-            {
-                return;
-            }
+        Interactive[] interactive = FindObjectsOfType<Interactive>();
 
-            if (AcquireFollower())
-            {
-                return;
-            }
-        }
-    }
-
-    bool AttemptToSeatFollower()
-    {
-        Table[] Tables = FindObjectsOfType<Table>();
-
-        // Find the nearest table.
-        Table NearestTable = null;
-        float NearestDistSq = ActivateDistance;
-        foreach (Table T in Tables)
+        Interactive nearestWithInteraction = null;
+        float nearestDistSq = ActivateDistance;
+        foreach (Interactive candidate in interactive)
         {
-            if (!T.Occupied)
+            if (candidate.HasValidInteraction(this))
             {
-                Vector3 ToTable = T.transform.position - transform.position;
-                float DistanceSq = ToTable.sqrMagnitude;
-                if (DistanceSq <= NearestDistSq)
+                Vector3 toCandidate = candidate.transform.position - transform.position;
+                float distSq = toCandidate.sqrMagnitude;
+                if (distSq < nearestDistSq)
                 {
-                    NearestTable = T;
-                    NearestDistSq = DistanceSq;
+                    nearestWithInteraction = candidate;
+                    nearestDistSq = distSq;
                 }
             }
         }
 
-        // If the table is unoccupoed, seat the follower at it.
-        if (NearestTable)
+        if (nearestWithInteraction)
         {
-            Customer C = Follower.GetComponent<Customer>();
-            C.MoveTarget = NearestTable.Chair0;
-            C.StartFollowDistance = 0.1f;
-            C.StopFollowDistance = 0.01f;
-            C.SetState(CustomerState.ConsideringOrder);
-            C.AtTable = NearestTable;
-
-            if (C.PlusOne)
-            {
-                C.PlusOne.MoveTarget = NearestTable.Chair1;
-                C.PlusOne.StartFollowDistance = 0.1f;
-                C.PlusOne.StopFollowDistance = 0.01f;
-                C.PlusOne.AtTable = NearestTable;
-            }
-
-            NearestTable.Occupied = true;
-            Follower = null;
+            nearestWithInteraction.Interact(this);
             return true;
         }
 
         return false;
-    }
-
-    bool TakeOrder()
-    {
-        Customer NearestCustomer = null;
-        float NearestDistSq = ActivateDistance;
-        Customer[] Customers = FindObjectsOfType<Customer>();
-        foreach (Customer C in Customers)
-        {
-            if (C.GetState() == CustomerState.WaitingToPlaceOrder)
-            {
-                Vector3 ToCustomer = C.transform.position - transform.position;
-                float DistanceSq = ToCustomer.sqrMagnitude;
-                if (DistanceSq <= NearestDistSq)
-                {
-                    NearestCustomer = C;
-                    NearestDistSq = DistanceSq;
-                }
-            }
-        }
-
-        if (NearestCustomer)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    bool AcquireFollower()
-    {
-        if (!QueueManager.Instance)
-        {
-            return false;
-        }
-
-        Vector3 ToQueueStart = QueueStartPosition.position - transform.position;
-        float DistanceSq = ToQueueStart.sqrMagnitude;
-        if (DistanceSq > (ActivateDistance * ActivateDistance))
-        {
-            return false;
-        }
-
-        Customer NewFollower = QueueManager.Instance.PopCustomer();
-        if (!NewFollower)
-        {
-            return false;
-        }
-
-        NewFollower.MoveTarget = gameObject.transform;
-        NewFollower.SetState(CustomerState.FollowingWaiterToTable);
-        Follower = NewFollower.gameObject.transform;
-        return true;
     }
 }
