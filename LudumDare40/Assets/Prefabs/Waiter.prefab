@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4027510344278146}
   - component: {fileID: 114211092696749228}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Waiter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4343782937982524}
   - component: {fileID: 212920474280432738}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec6b07673cb4054c8584491f925980f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 1
+  MoveSpeed: 3
 --- !u!212 &212920474280432738
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -113,10 +113,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1868427699
+  m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1f25f6d04a88bfc4f92be2ea118e588c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 467483309e41afe4196f46a7f18a65b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
