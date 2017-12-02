@@ -18,32 +18,43 @@ public class Customer : MonoBehaviour
 
     public float MoveSpeed = 1.0f;
 
-    public Transform Leader;
+    public Transform MoveTarget;
+    public Table AtTable;
 
     public float StartFollowDistance = 1.0f;
     public float StopFollowDistance = 0.5f;
 
-    public CustomerState CurrentState = CustomerState.WaitingToBeSeated;
+    CustomerState CurrentState = CustomerState.WaitingToBeSeated;
     float Mood = 100.0f;
 
     bool DoFollow = false;
 
+    public void SetState(CustomerState State)
+    {
+        CurrentState = State;
+
+        if (CurrentState == CustomerState.AtTable)
+        {
+            StartCoroutine(GoToExit());
+        }
+    }
+
     void Update()
     {
-        if (Leader)
+        if (MoveTarget)
         {
-            FollowLeader();
+            GoToMoveTarget();
         }
 
         UpdateMood();
     }
 
-    void FollowLeader()
+    void GoToMoveTarget()
     {
         Vector3 Position = transform.position;
-        Vector3 LeaderPosition = Leader.position;
-        Vector3 ToLeader = LeaderPosition - Position;
-        float DistanceSq = ToLeader.sqrMagnitude;
+        Vector3 MoveTargetPosition = MoveTarget.position;
+        Vector3 ToMoveTarget = MoveTargetPosition - Position;
+        float DistanceSq = ToMoveTarget.sqrMagnitude;
 
         if (DistanceSq >= (StartFollowDistance * StartFollowDistance))
         {
@@ -56,7 +67,7 @@ public class Customer : MonoBehaviour
 
         if (DoFollow)
         {
-            Vector3 Direction = ToLeader.normalized;
+            Vector3 Direction = ToMoveTarget.normalized;
             Position += Direction * MoveSpeed * Time.deltaTime;
             transform.position = Position;
         }
@@ -84,5 +95,16 @@ public class Customer : MonoBehaviour
         }
 
         Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
+    }
+
+    IEnumerator GoToExit()
+    {
+        yield return new WaitForSeconds(10.0f);
+
+        AtTable.Occupied = false;
+        AtTable = null;
+
+        GameObject Exit = GameObject.FindGameObjectWithTag("Exit");
+        MoveTarget = Exit.transform;
     }
 }

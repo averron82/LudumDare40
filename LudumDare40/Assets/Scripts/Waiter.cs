@@ -87,8 +87,8 @@ public class Waiter : MonoBehaviour
             return;
         }
 
-        NewFollower.Leader = gameObject.transform;
-        NewFollower.CurrentState = CustomerState.FollowingWaiterToTable;
+        NewFollower.MoveTarget = gameObject.transform;
+        NewFollower.SetState(CustomerState.FollowingWaiterToTable);
         Follower = NewFollower.gameObject.transform;
     }
 
@@ -113,10 +113,11 @@ public class Waiter : MonoBehaviour
         if (NearestTable && !NearestTable.Occupied)
         {
             Customer C = Follower.GetComponent<Customer>();
-            C.Leader = NearestTable.Chair0;
+            C.MoveTarget = NearestTable.Chair0;
             C.StartFollowDistance = 0.1f;
             C.StopFollowDistance = 0.05f;
-            C.CurrentState = CustomerState.AtTable;
+            C.SetState(CustomerState.AtTable);
+            C.AtTable = NearestTable;
             NearestTable.Occupied = true;
             Follower = null;
         }

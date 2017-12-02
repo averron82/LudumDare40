@@ -712,6 +712,48 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d832fdc5d708eeb40b43ef1d5f713b04, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &1725301178
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 3.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -3.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0.16572937
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777551926894552, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 93d99a4706013c145babe14e3fca8dee, type: 2}
+  m_IsPrefabParent: 0
 --- !u!4 &1727676147 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4803509182636708, guid: d832fdc5d708eeb40b43ef1d5f713b04,
