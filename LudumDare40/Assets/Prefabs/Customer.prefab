@@ -81,10 +81,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72eb7c4510f98a40ba52601217d5377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MoodAdjustWaitingToBeSeated: -1
+  MoodAdjustFollowingWaiterToTable: -0.1
+  MoodAdjustAtTable: 0
   MoveSpeed: 1
   Leader: {fileID: 0}
-  StartFollowDistance: 1
+  StartFollowDistance: 0.6
   StopFollowDistance: 0.5
+  CurrentState: 0
 --- !u!212 &212585629392003264
 SpriteRenderer:
   m_ObjectHideFlags: 1
