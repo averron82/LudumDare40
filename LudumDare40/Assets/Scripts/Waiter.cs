@@ -7,15 +7,22 @@ public class Waiter : MonoBehaviour
     public float MoveSpeed = 1.0f;
 
     public Transform Follower;
-    public Transform QueueStartPosition;
 
     public float ActivateDistance = 1.0f;
 
-    private Animator MyAnimator;
+    public bool ReceiveInput = true;
 
+    public Meal meal;
+
+    private Animator MyAnimator;
     private SpriteRenderer MySpriteRenderer;
 
     bool Flipped = false;
+
+    public void TakeMeal(Meal mealToTake)
+    {
+        meal = mealToTake;
+    }
 
     void Start()
     {
@@ -25,111 +32,80 @@ public class Waiter : MonoBehaviour
 
     void Update()
     {
-        float Vertical = Input.GetAxis("Vertical");
-        float Horizontal = Input.GetAxis("Horizontal");
-
-        Vector3 position = gameObject.transform.position;
-        position.x += Horizontal * MoveSpeed * Time.deltaTime;
-        position.y += Vertical * MoveSpeed * Time.deltaTime;
-
-        if (Horizontal < 0.0f)
+        if (ReceiveInput)
         {
-            if (!Flipped)
+            float Vertical = Input.GetAxis("Vertical");
+            float Horizontal = Input.GetAxis("Horizontal");
+
+            Vector3 position = gameObject.transform.position;
+            position.x += Horizontal * MoveSpeed * Time.deltaTime;
+            position.y += Vertical * MoveSpeed * Time.deltaTime;
+
+            if (Horizontal < 0.0f)
             {
-                MySpriteRenderer.flipX = true;
-                Flipped = true;
+                if (!Flipped)
+                {
+                    MySpriteRenderer.flipX = true;
+                    Flipped = true;
+                }
             }
-        }
-        else if (Horizontal > 0.0f)
-        {
-            if (Flipped)
+            else if (Horizontal > 0.0f)
             {
-                MySpriteRenderer.flipX = false;
-                Flipped = false;
+                if (Flipped)
+                {
+                    MySpriteRenderer.flipX = false;
+                    Flipped = false;
+                }
             }
-        }
 
-        if (Horizontal != 0.0f || Vertical != 0.0f)
-        {
-            MyAnimator.SetFloat("Speed", 1.0f);
+            if (Horizontal != 0.0f || Vertical != 0.0f)
+            {
+                MyAnimator.SetFloat("Speed", 1.0f);
+            }
+            else
+            {
+                MyAnimator.SetFloat("Speed", 0.0f);
+            }
+
+            gameObject.transform.position = position;
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                Interact();
+            }
         }
         else
         {
             MyAnimator.SetFloat("Speed", 0.0f);
         }
-
-        gameObject.transform.position = position;
-
-        bool Activate = Input.GetButtonDown("Jump");
-        if (Activate)
-        {
-            OnActivate();
-        }
     }
 
-    void OnActivate()
+    bool Interact()
     {
-        if (Follower)
+        Interactive[] interactive = FindObjectsOfType<Interactive>();
+
+        Interactive nearestWithInteraction = null;
+        float nearestDistSq = ActivateDistance;
+        foreach (Interactive candidate in interactive)
         {
-            AttemptSeatFollower();
-        }
-        else
-        {
-            Vector3 ToQueueStart = QueueStartPosition.position - transform.position;
-            float DistanceSq = ToQueueStart.sqrMagnitude;
-            if (DistanceSq < (ActivateDistance * ActivateDistance))
+            if (candidate.HasValidInteraction(this))
             {
-                AttemptAcquireFollower();
-            }
-        }
-    }
-
-    void AttemptAcquireFollower()
-    {
-        if (!QueueManager.Instance)
-        {
-            return;
-        }
-
-        Customer NewFollower = QueueManager.Instance.PopCustomer();
-        if (!NewFollower)
-        {
-            return;
-        }
-
-        NewFollower.MoveTarget = gameObject.transform;
-        NewFollower.SetState(CustomerState.FollowingWaiterToTable);
-        Follower = NewFollower.gameObject.transform;
-    }
-
-    void AttemptSeatFollower()
-    {
-        Table[] Tables = FindObjectsOfType<Table>();
-
-        // Find the nearest table.
-        Table NearestTable = null;
-        float NearestDistSq = ActivateDistance;
-        foreach (Table T in Tables)
-        {
-            Vector3 ToTable = T.transform.position - transform.position;
-            float DistanceSq = ToTable.sqrMagnitude;
-            if (DistanceSq <= NearestDistSq)
-            {
-                NearestTable = T;
+                Vector3 toCandidate = candidate.transform.position - transform.position;
+                float distSq = toCandidate.sqrMagnitude;
+                if (distSq < nearestDistSq)
+                {
+                    nearestWithInteraction = candidate;
+                    nearestDistSq = distSq;
+                }
             }
         }
 
-        // If the table is unoccupoed, seat the follower at it.
-        if (NearestTable && !NearestTable.Occupied)
+        if (nearestWithInteraction)
         {
-            Customer C = Follower.GetComponent<Customer>();
-            C.MoveTarget = NearestTable.Chair0;
-            C.StartFollowDistance = 0.1f;
-            C.StopFollowDistance = 0.05f;
-            C.SetState(CustomerState.AtTable);
-            C.AtTable = NearestTable;
-            NearestTable.Occupied = true;
-            Follower = null;
+            nearestWithInteraction.Interact(this);
+            return true;
         }
+
+        return false;
     }
 }

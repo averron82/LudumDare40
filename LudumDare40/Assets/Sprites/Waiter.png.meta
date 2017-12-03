@@ -1,25 +1,29 @@
 fileFormatVersion: 2
-guid: 0a17d861f381b7345ac1ebbe74a40620
-timeCreated: 1512237552
+guid: 467483309e41afe4196f46a7f18a65b0
+timeCreated: 1512238209
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Customer1_0
-    21300002: Customer1_1
-    21300004: Customer1_2
-    21300006: Customer1_3
-    21300008: Customer1_4
-    21300010: Customer1_5
-    21300012: Customer1_6
-    21300014: Customer1_7
-    21300016: Customer1_8
-    21300018: Customer1_9
-    21300020: Customer1_10
-    21300022: Customer1_11
-    21300024: Customer1_12
-    21300026: Customer1_13
-    21300028: Customer1_14
-    21300030: Customer1_15
+    21300000: Waitress_Idle
+    21300002: Waitress_Run1
+    21300004: Waitress_Run2
+    21300006: Waitress_Run3
+    21300008: Waiter_0
+    21300010: Waiter_1
+    21300012: Waiter_2
+    21300014: Waiter_3
+    21300016: Waiter_4
+    21300018: Waiter_5
+    21300020: Waiter_6
+    21300022: Waiter_7
+    21300024: Waiter_8
+    21300026: Waiter_9
+    21300028: Waiter_10
+    21300030: Waiter_11
+    21300032: Waiter_12
+    21300034: Waiter_13
+    21300036: Waiter_14
+    21300038: Waiter_15
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -103,7 +107,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Customer1_0
+      name: Waiter_0
       rect:
         serializedVersion: 2
         x: 0
@@ -117,7 +121,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_1
+      name: Waiter_1
       rect:
         serializedVersion: 2
         x: 32
@@ -131,7 +135,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_2
+      name: Waiter_2
       rect:
         serializedVersion: 2
         x: 64
@@ -145,7 +149,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_3
+      name: Waiter_3
       rect:
         serializedVersion: 2
         x: 96
@@ -159,7 +163,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_4
+      name: Waiter_4
       rect:
         serializedVersion: 2
         x: 0
@@ -173,7 +177,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_5
+      name: Waiter_5
       rect:
         serializedVersion: 2
         x: 32
@@ -187,7 +191,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_6
+      name: Waiter_6
       rect:
         serializedVersion: 2
         x: 64
@@ -201,7 +205,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_7
+      name: Waiter_7
       rect:
         serializedVersion: 2
         x: 96
@@ -215,7 +219,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_8
+      name: Waiter_8
       rect:
         serializedVersion: 2
         x: 0
@@ -229,7 +233,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_9
+      name: Waiter_9
       rect:
         serializedVersion: 2
         x: 32
@@ -243,7 +247,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_10
+      name: Waiter_10
       rect:
         serializedVersion: 2
         x: 64
@@ -257,7 +261,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_11
+      name: Waiter_11
       rect:
         serializedVersion: 2
         x: 96
@@ -271,7 +275,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_12
+      name: Waiter_12
       rect:
         serializedVersion: 2
         x: 0
@@ -285,7 +289,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_13
+      name: Waiter_13
       rect:
         serializedVersion: 2
         x: 32
@@ -299,7 +303,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_14
+      name: Waiter_14
       rect:
         serializedVersion: 2
         x: 64
@@ -313,7 +317,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Customer1_15
+      name: Waiter_15
       rect:
         serializedVersion: 2
         x: 96

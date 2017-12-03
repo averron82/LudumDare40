@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4343782937982524}
   - component: {fileID: 212920474280432738}
-  - component: {fileID: 95911310668477246}
+  - component: {fileID: 95350476679569538}
   m_Layer: 0
   m_Name: _GFX
   m_TagString: Untagged
@@ -51,7 +51,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1680674019411016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.44, y: 0.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4343782937982524}
@@ -71,7 +71,7 @@ Transform:
   m_Father: {fileID: 4027510344278146}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95911310668477246
+--- !u!95 &95350476679569538
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -80,7 +80,7 @@ Animator:
   m_GameObject: {fileID: 1732360282385968}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4c482697874459b448e65cc65f4b02a4, type: 2}
+  m_Controller: {fileID: 9100000, guid: beaaba2cbf7f83543ab3e7f01726fb8d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -99,10 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec6b07673cb4054c8584491f925980f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
+  MoveSpeed: 0.6
   Follower: {fileID: 0}
-  QueueStartPosition: {fileID: 0}
-  ActivateDistance: 1
+  ActivateDistance: 0.2
 --- !u!212 &212920474280432738
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -137,7 +136,7 @@ SpriteRenderer:
   m_SortingLayerID: -1868427699
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 467483309e41afe4196f46a7f18a65b0, type: 3}
+  m_Sprite: {fileID: 21300008, guid: 467483309e41afe4196f46a7f18a65b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
