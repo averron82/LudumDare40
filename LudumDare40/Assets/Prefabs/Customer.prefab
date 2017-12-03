@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4066532838521750}
   - component: {fileID: 212791212281898890}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Moodlet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4008404515799420}
   - component: {fileID: 212883848336977594}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Icon2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,10 @@ GameObject:
   - component: {fileID: 4504530660806128}
   - component: {fileID: 114752246287677716}
   - component: {fileID: 114193363404246760}
-  m_Layer: 0
+  - component: {fileID: 114791638659102528}
+  - component: {fileID: 50724098272952288}
+  - component: {fileID: 58209342717893180}
+  m_Layer: 8
   m_Name: Customer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +73,7 @@ GameObject:
   - component: {fileID: 4340586818198538}
   - component: {fileID: 212130052799112662}
   - component: {fileID: 114274752689016452}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OrderBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4864135420351766}
   - component: {fileID: 212094931071346390}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Icon0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4322051021718474}
   - component: {fileID: 212006144645521778}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Icon1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +122,8 @@ GameObject:
   - component: {fileID: 4307165020757168}
   - component: {fileID: 212585629392003264}
   - component: {fileID: 95435104400644818}
-  m_Layer: 0
+  - component: {fileID: 114028601779833494}
+  m_Layer: 8
   m_Name: _GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +205,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1311264028268164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.649248, y: 0.12318277, z: 0.17869055}
+  m_LocalPosition: {x: -1.1270473, y: 0.0074206367, z: 0.17869055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4307165020757168}
@@ -223,6 +227,41 @@ Transform:
   m_Father: {fileID: 4340586818198538}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50724098272952288
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1311264028268164}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 10
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!58 &58209342717893180
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1311264028268164}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.12}
+  serializedVersion: 2
+  m_Radius: 0.06
 --- !u!95 &95435104400644818
 Animator:
   serializedVersion: 3
@@ -240,6 +279,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114028601779833494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1869249549921780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27dcb20336c0cf941a858dbe5db6bb6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114193363404246760
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -282,14 +332,25 @@ MonoBehaviour:
   MoodAdjustWaitingToPlaceOrder: -0.1
   MoodAdjustWaitingForMeal: -0.1
   MoodAdjustEatingMeal: 0
-  MoveSpeed: 0.6
+  MoveSpeed: 300
   MoveTarget: {fileID: 0}
-  AtTable: {fileID: 0}
+  table: {fileID: 0}
   PlusOne: {fileID: 0}
   Moodlet: {fileID: 212791212281898890}
   StartFollowDistance: 0.3
   StopFollowDistance: 0.25
   orderBubble: {fileID: 114274752689016452}
+--- !u!114 &114791638659102528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1311264028268164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2d2d86a1d4443478d43890d2cfeb23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212006144645521778
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -453,8 +514,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1868427699
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 0a17d861f381b7345ac1ebbe74a40620, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

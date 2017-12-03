@@ -36,17 +36,15 @@ public class Table : MonoBehaviour
     {
         Customer customer = waiter.Follower.GetComponent<Customer>();
         customer.MoveTarget = Chair0;
-        customer.StartFollowDistance = 0.1f;
-        customer.StopFollowDistance = 0.01f;
+        customer.StopFollowDistance = 0.05f;
         customer.State = CustomerState.ConsideringOrder;
-        customer.AtTable = this;
+        customer.table = this;
 
         if (customer.PlusOne)
         {
             customer.PlusOne.MoveTarget = Chair1;
-            customer.PlusOne.StartFollowDistance = 0.1f;
-            customer.PlusOne.StopFollowDistance = 0.01f;
-            customer.PlusOne.AtTable = this;
+            customer.PlusOne.StopFollowDistance = 0.05f;
+            customer.PlusOne.table = this;
         }
 
         waiter.Follower = null;

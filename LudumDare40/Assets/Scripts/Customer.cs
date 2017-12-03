@@ -27,10 +27,10 @@ public class Customer : MonoBehaviour
     public float MoodAdjustWaitingForMeal = -0.1f;
     public float MoodAdjustEatingMeal = 0.0f;
 
-    public float MoveSpeed = 1.0f;
+    public float MoveSpeed = 300.0f;
 
     public Transform MoveTarget;
-    public Table AtTable;
+    public Table table;
     public Customer PlusOne;
     public SpriteRenderer Moodlet;
 
@@ -44,14 +44,11 @@ public class Customer : MonoBehaviour
 
     bool ShouldMove = false;
 
-    private Animator MyAnimator;
-    private SpriteRenderer MySpriteRenderer;
-    bool Flipped = false;
-
     Interactive interactive;
 
     Meal desiredMeal;
-    Meal meal;
+
+    Rigidbody2D rigidBody;
 
     public CustomerState State
     {
@@ -60,7 +57,6 @@ public class Customer : MonoBehaviour
         set
         {
             state = value;
-
             switch (state)
             {
                 case CustomerState.ConsideringOrder:
@@ -99,15 +95,8 @@ public class Customer : MonoBehaviour
         }
     }
 
-    public CustomerState GetState()
-    {
-        return state;
-    }
-
     void Start()
     {
-        MyAnimator = GetComponentInChildren<Animator>();
-        MySpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         Moodlet.enabled = false;
 
         if ((state != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
@@ -121,6 +110,13 @@ public class Customer : MonoBehaviour
         if (MealManager.Instance)
         {
             desiredMeal = MealManager.Instance.GenerateMeal();
+        }
+
+        rigidBody = GetComponent<Rigidbody2D>();
+        if (!rigidBody)
+        {
+            Debug.LogError(
+                string.Format("Failed to retrieve RigidBody2D on {0}", gameObject.name));
         }
     }
 
@@ -150,7 +146,6 @@ public class Customer : MonoBehaviour
 
     void TakeMeal(Waiter waiter)
     {
-        meal = waiter.meal;
         waiter.meal = null;
         State = CustomerState.EatingMeal;
     }
@@ -179,59 +174,7 @@ public class Customer : MonoBehaviour
 
     void Update()
     {
-        if (MoveTarget)
-        {
-            GoToMoveTarget();
-        }
-
         UpdateMood();
-    }
-
-    void GoToMoveTarget()
-    {
-        Vector3 Position = transform.position;
-        Vector3 MoveTargetPosition = MoveTarget.position;
-        Vector3 ToMoveTarget = MoveTargetPosition - Position;
-        float DistanceSq = ToMoveTarget.sqrMagnitude;
-
-        if (DistanceSq >= (StartFollowDistance * StartFollowDistance))
-        {
-            ShouldMove = true;
-        }
-        else if (DistanceSq <= (StopFollowDistance * StopFollowDistance))
-        {
-            ShouldMove = false;
-        }
-
-        if (ShouldMove)
-        {
-            Vector3 Direction = ToMoveTarget.normalized;
-            Position += Direction * MoveSpeed * Time.deltaTime;
-            transform.position = Position;
-
-            if (Direction.x < 0.0f)
-            {
-                if (!Flipped)
-                {
-                    MySpriteRenderer.flipX = true;
-                    Flipped = true;
-                }
-            }
-            else if (Direction.x > 0.0f)
-            {
-                if (Flipped)
-                {
-                    MySpriteRenderer.flipX = false;
-                    Flipped = false;
-                }
-            }
-
-            MyAnimator.SetFloat("Speed", 1.0f);
-        }
-        else
-        {
-            MyAnimator.SetFloat("Speed", 0.0f);
-        }
     }
 
     void UpdateMood()
@@ -260,8 +203,8 @@ public class Customer : MonoBehaviour
             }
             case CustomerState.WaitingForMeal:
             {
-               Mood += MoodAdjustWaitingForMeal * Time.deltaTime;
-               break;
+                Mood += MoodAdjustWaitingForMeal * Time.deltaTime;
+                break;
             }
             case CustomerState.EatingMeal:
             {
@@ -271,6 +214,50 @@ public class Customer : MonoBehaviour
         }
 
         Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
+    }
+
+    void FixedUpdate()
+    {
+        if (MoveTarget)
+        {
+            MoveToTarget();
+        }
+    }
+
+    void MoveToTarget()
+    {
+        Vector3 Position = transform.position;
+        Vector3 MoveTargetPosition = MoveTarget.position;
+        Vector3 ToMoveTarget = MoveTargetPosition - Position;
+        float DistanceSq = ToMoveTarget.sqrMagnitude;
+
+        if (DistanceSq >= (StartFollowDistance * StartFollowDistance))
+        {
+            ShouldMove = true;
+        }
+        else if (DistanceSq <= (StopFollowDistance * StopFollowDistance))
+        {
+            ShouldMove = false;
+        }
+
+        if (ShouldMove)
+        {
+            Vector2 force = new Vector2(ToMoveTarget.x, ToMoveTarget.y);
+
+            // Avoid table.
+            if (table)
+            {
+                Vector3 tablePosition = table.transform.position;
+                Vector3 toTable = tablePosition - Position;
+                if (toTable.sqrMagnitude < ToMoveTarget.sqrMagnitude)
+                {
+                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.2f;
+                }
+            }
+
+            force = force.normalized * MoveSpeed * Time.deltaTime;
+            rigidBody.AddForce(force);
+        }
     }
 
     IEnumerator WaitToPlaceOrder(float Seconds)
@@ -300,15 +287,15 @@ public class Customer : MonoBehaviour
         MoveTarget = Exit.transform;
         StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
         StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
-        AtTable.SetAvailable();
-        AtTable = null;
+        table.SetAvailable();
+        table = null;
 
         if (PlusOne)
         {
             PlusOne.MoveTarget = transform;
             PlusOne.StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
             PlusOne.StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
-            PlusOne.AtTable = null;
+            PlusOne.table = null;
         }
     }
 }

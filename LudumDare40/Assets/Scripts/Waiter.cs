@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class Waiter : MonoBehaviour
 {
-    public float MoveSpeed = 1.0f;
-
+    public float MoveSpeed = 300.0f;
     public Transform Follower;
-
     public float ActivateDistance = 1.0f;
-
     public bool ReceiveInput = true;
-
     public Meal meal;
 
-    private Animator MyAnimator;
-    private SpriteRenderer MySpriteRenderer;
-
-    bool Flipped = false;
+    Rigidbody2D rigidBody;
 
     public void TakeMeal(Meal mealToTake)
     {
@@ -26,57 +19,34 @@ public class Waiter : MonoBehaviour
 
     void Start()
     {
-        MyAnimator = GetComponentInChildren<Animator>();
-        MySpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        if (!rigidBody)
+        {
+            Debug.LogError(
+                string.Format("Failed to retrieve RigidBody2D on {0}", gameObject.name));
+        }
     }
 
     void Update()
     {
         if (ReceiveInput)
         {
-            float Vertical = Input.GetAxis("Vertical");
-            float Horizontal = Input.GetAxis("Horizontal");
-
-            Vector3 position = gameObject.transform.position;
-            position.x += Horizontal * MoveSpeed * Time.deltaTime;
-            position.y += Vertical * MoveSpeed * Time.deltaTime;
-
-            if (Horizontal < 0.0f)
-            {
-                if (!Flipped)
-                {
-                    MySpriteRenderer.flipX = true;
-                    Flipped = true;
-                }
-            }
-            else if (Horizontal > 0.0f)
-            {
-                if (Flipped)
-                {
-                    MySpriteRenderer.flipX = false;
-                    Flipped = false;
-                }
-            }
-
-            if (Horizontal != 0.0f || Vertical != 0.0f)
-            {
-                MyAnimator.SetFloat("Speed", 1.0f);
-            }
-            else
-            {
-                MyAnimator.SetFloat("Speed", 0.0f);
-            }
-
-            gameObject.transform.position = position;
-
             if (Input.GetButtonDown("Jump"))
             {
                 Interact();
             }
         }
-        else
+    }
+
+    void FixedUpdate()
+    {
+        if (ReceiveInput)
         {
-            MyAnimator.SetFloat("Speed", 0.0f);
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+            Vector2 force = new Vector2(horizontal, vertical);
+            force = force.normalized * MoveSpeed * Time.deltaTime;
+            rigidBody.AddForce(force);
         }
     }
 
