@@ -64,7 +64,7 @@ public class QueueManager : MonoBehaviour
         }
 
         customerAtFront.MoveTarget = waiter.transform;
-        customerAtFront.SetState(CustomerState.FollowingWaiterToTable);
+        customerAtFront.State = CustomerState.FollowingWaiterToTable;
         waiter.Follower = customerAtFront.transform;
     }
 

@@ -38,7 +38,7 @@ public class Table : MonoBehaviour
         customer.MoveTarget = Chair0;
         customer.StartFollowDistance = 0.1f;
         customer.StopFollowDistance = 0.01f;
-        customer.SetState(CustomerState.ConsideringOrder);
+        customer.State = CustomerState.ConsideringOrder;
         customer.AtTable = this;
 
         if (customer.PlusOne)

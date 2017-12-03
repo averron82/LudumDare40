@@ -10,10 +10,19 @@ public class Waiter : MonoBehaviour
 
     public float ActivateDistance = 1.0f;
 
+    public bool ReceiveInput = true;
+
+    public Meal meal;
+
     private Animator MyAnimator;
     private SpriteRenderer MySpriteRenderer;
 
     bool Flipped = false;
+
+    public void TakeMeal(Meal mealToTake)
+    {
+        meal = mealToTake;
+    }
 
     void Start()
     {
@@ -23,44 +32,51 @@ public class Waiter : MonoBehaviour
 
     void Update()
     {
-        float Vertical = Input.GetAxis("Vertical");
-        float Horizontal = Input.GetAxis("Horizontal");
-
-        Vector3 position = gameObject.transform.position;
-        position.x += Horizontal * MoveSpeed * Time.deltaTime;
-        position.y += Vertical * MoveSpeed * Time.deltaTime;
-
-        if (Horizontal < 0.0f)
+        if (ReceiveInput)
         {
-            if (!Flipped)
+            float Vertical = Input.GetAxis("Vertical");
+            float Horizontal = Input.GetAxis("Horizontal");
+
+            Vector3 position = gameObject.transform.position;
+            position.x += Horizontal * MoveSpeed * Time.deltaTime;
+            position.y += Vertical * MoveSpeed * Time.deltaTime;
+
+            if (Horizontal < 0.0f)
             {
-                MySpriteRenderer.flipX = true;
-                Flipped = true;
+                if (!Flipped)
+                {
+                    MySpriteRenderer.flipX = true;
+                    Flipped = true;
+                }
             }
-        }
-        else if (Horizontal > 0.0f)
-        {
-            if (Flipped)
+            else if (Horizontal > 0.0f)
             {
-                MySpriteRenderer.flipX = false;
-                Flipped = false;
+                if (Flipped)
+                {
+                    MySpriteRenderer.flipX = false;
+                    Flipped = false;
+                }
             }
-        }
 
-        if (Horizontal != 0.0f || Vertical != 0.0f)
-        {
-            MyAnimator.SetFloat("Speed", 1.0f);
+            if (Horizontal != 0.0f || Vertical != 0.0f)
+            {
+                MyAnimator.SetFloat("Speed", 1.0f);
+            }
+            else
+            {
+                MyAnimator.SetFloat("Speed", 0.0f);
+            }
+
+            gameObject.transform.position = position;
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                Interact();
+            }
         }
         else
         {
             MyAnimator.SetFloat("Speed", 0.0f);
-        }
-
-        gameObject.transform.position = position;
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            Interact();
         }
     }
 

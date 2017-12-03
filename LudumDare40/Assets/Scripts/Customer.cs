@@ -17,6 +17,9 @@ public enum CustomerState
 
 public class Customer : MonoBehaviour
 {
+    public const float DEFAULT_START_FOLLOW_DISTANCE = 1.0f;
+    public const float DEFAULT_STOP_FOLLOW_DISTANCE = 0.5f;
+
     public float MoodAdjustWaitingToBeSeated = -0.1f;
     public float MoodAdjustFollowingWaiterToTable = -0.1f;
     public float MoodAdjustConsideringOrder = 0.0f;
@@ -31,10 +34,12 @@ public class Customer : MonoBehaviour
     public Customer PlusOne;
     public SpriteRenderer Moodlet;
 
-    public float StartFollowDistance = 1.0f;
-    public float StopFollowDistance = 0.5f;
+    public float StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
+    public float StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
 
-    CustomerState CurrentState = CustomerState.WaitingToBeSeated;
+    public OrderBubble orderBubble;
+
+    CustomerState state = CustomerState.WaitingToBeSeated;
     float Mood = 100.0f;
 
     bool ShouldMove = false;
@@ -45,35 +50,58 @@ public class Customer : MonoBehaviour
 
     Interactive interactive;
 
-    public void SetState(CustomerState State)
-    {
-        CurrentState = State;
+    Meal desiredMeal;
+    Meal meal;
 
-        switch (CurrentState)
+    public CustomerState State
+    {
+        get { return state; }
+
+        set
         {
-            case CustomerState.ConsideringOrder:
+            state = value;
+
+            switch (state)
             {
-                StartCoroutine(WantToPlaceOrder(Random.Range(5.0f, 10.0f)));
-                break;
-            }
-            case CustomerState.WaitingToPlaceOrder:
-            {
-                Moodlet.enabled = true;
-                interactive.SetInteraction(PlaceOrder, ValidateInteraction);
-                break;
-            }
-            case CustomerState.PlacingOrder:
-            {
-                Moodlet.enabled = false;
-                interactive.SetInteraction(null);
-                break;
+                case CustomerState.ConsideringOrder:
+                {
+                    StartCoroutine(WaitToPlaceOrder(Random.Range(5.0f, 10.0f)));
+                    break;
+                }
+                case CustomerState.WaitingToPlaceOrder:
+                {
+                    Moodlet.enabled = true;
+                    break;
+                }
+                case CustomerState.PlacingOrder:
+                {
+                    Moodlet.enabled = false;
+                    orderBubble.Show(desiredMeal);
+                    StartCoroutine(WaitForMeal(Random.Range(1.0f, 3.0f)));
+                    break;
+                }
+                case CustomerState.WaitingForMeal:
+                {
+                    orderBubble.Hide();
+                    break;
+                }
+                case CustomerState.EatingMeal:
+                {
+                    StartCoroutine(EatMeal(Random.Range(4.0f, 6.0f)));
+                    break;
+                }
+                case CustomerState.Leaving:
+                {
+                    Leave();
+                    break;
+                }
             }
         }
     }
 
     public CustomerState GetState()
     {
-        return CurrentState;
+        return state;
     }
 
     void Start()
@@ -82,30 +110,71 @@ public class Customer : MonoBehaviour
         MySpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         Moodlet.enabled = false;
 
-        if ((CurrentState != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
+        if ((state != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
         {
             SpawnPlusOne();
         }
 
         interactive = GetComponent<Interactive>();
+        interactive.SetInteraction(Interact, ValidateInteraction);
 
+        if (MealManager.Instance)
+        {
+            desiredMeal = MealManager.Instance.GenerateMeal();
+        }
     }
 
     void SpawnPlusOne()
     {
         PlusOne = Instantiate(this, transform.position, Quaternion.identity);
         PlusOne.MoveTarget = transform;
-        PlusOne.CurrentState = CustomerState.PlusOne;
+        PlusOne.state = CustomerState.PlusOne;
     }
 
-    void PlaceOrder(Waiter waiter)
+    void Interact(Waiter waiter)
     {
-        SetState(CustomerState.PlacingOrder);
+        switch (state)
+        {
+            case CustomerState.WaitingToPlaceOrder:
+            {
+                State = CustomerState.PlacingOrder;
+                break;
+            }
+            case CustomerState.WaitingForMeal:
+            {
+                TakeMeal(waiter);
+                break;
+            }
+        }
+    }
+
+    void TakeMeal(Waiter waiter)
+    {
+        meal = waiter.meal;
+        waiter.meal = null;
+        State = CustomerState.EatingMeal;
     }
 
     bool ValidateInteraction(Waiter waiter)
     {
-        return !waiter.Follower;
+        if (waiter.Follower)
+        {
+            return false;
+        }
+
+        switch (State)
+        {
+            case CustomerState.WaitingToPlaceOrder:
+            {
+                return true;
+            }
+            case CustomerState.WaitingForMeal:
+            {
+                return waiter.meal != null;
+            }
+        }
+
+        return false;
     }
 
     void Update()
@@ -167,7 +236,7 @@ public class Customer : MonoBehaviour
 
     void UpdateMood()
     {
-        switch (CurrentState)
+        switch (state)
         {
             case CustomerState.WaitingToBeSeated:
             {
@@ -204,21 +273,42 @@ public class Customer : MonoBehaviour
         Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
     }
 
-    IEnumerator WantToPlaceOrder(float Seconds)
+    IEnumerator WaitToPlaceOrder(float Seconds)
     {
         yield return new WaitForSeconds(Seconds);
 
-        SetState(CustomerState.WaitingToPlaceOrder);
+        State = CustomerState.WaitingToPlaceOrder;
     }
 
-    IEnumerator GoToExit()
+    IEnumerator WaitForMeal(float Seconds)
     {
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(Seconds);
 
+        State = CustomerState.WaitingForMeal;
+    }
+
+    IEnumerator EatMeal(float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+
+        State = CustomerState.Leaving;
+    }
+
+    void Leave()
+    {
+        GameObject Exit = GameObject.FindGameObjectWithTag("Exit");
+        MoveTarget = Exit.transform;
+        StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
+        StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
         AtTable.SetAvailable();
         AtTable = null;
 
-        GameObject Exit = GameObject.FindGameObjectWithTag("Exit");
-        MoveTarget = Exit.transform;
+        if (PlusOne)
+        {
+            PlusOne.MoveTarget = transform;
+            PlusOne.StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
+            PlusOne.StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
+            PlusOne.AtTable = null;
+        }
     }
 }
