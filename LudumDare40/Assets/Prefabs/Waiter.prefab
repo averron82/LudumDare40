@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114501544329879904}
   - component: {fileID: 50870705134369170}
   - component: {fileID: 58037570010147936}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Waiter
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 212920474280432738}
   - component: {fileID: 95350476679569538}
   - component: {fileID: 114157398520321730}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: _GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1680674019411016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.46, y: 0.69, z: 0}
+  m_LocalPosition: {x: 0.75, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4343782937982524}
