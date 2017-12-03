@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 114501544329879904}
   - component: {fileID: 50870705134369170}
   - component: {fileID: 58037570010147936}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Waiter
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 212920474280432738}
   - component: {fileID: 95350476679569538}
   - component: {fileID: 114157398520321730}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: _GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
