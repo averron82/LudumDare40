@@ -68,7 +68,7 @@ public class Kitchen : MonoBehaviour
             }
             case KitchenState.WaitingForCollection:
             {
-                waiter.TakeMeal(meal);
+                waiter.Meal = meal;
                 State = KitchenState.WaitingForOrder;
                 break;
             }
@@ -90,7 +90,7 @@ public class Kitchen : MonoBehaviour
             }
             case KitchenState.WaitingForCollection:
             {
-                return waiter.meal == null;
+                return waiter.Meal == null;
             }
         }
 

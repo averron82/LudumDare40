@@ -8,14 +8,24 @@ public class Waiter : MonoBehaviour
     public Transform Follower;
     public float ActivateDistance = 1.0f;
     public bool ReceiveInput = true;
-    public Meal meal;
+
+    Meal meal;
+    public Meal Meal
+    {
+        get
+        {
+            return meal;
+        }
+
+        set
+        {
+            meal = value;
+            animator.SetBool("HasMeal", meal != null);
+        }
+    }
 
     Rigidbody2D rigidBody;
-
-    public void TakeMeal(Meal mealToTake)
-    {
-        meal = mealToTake;
-    }
+    Animator animator;
 
     void Start()
     {
@@ -24,6 +34,13 @@ public class Waiter : MonoBehaviour
         {
             Debug.LogError(
                 string.Format("Failed to retrieve RigidBody2D on {0}", gameObject.name));
+        }
+
+        animator = GetComponentInChildren<Animator>();
+        if (!animator)
+        {
+            Debug.LogError(
+                string.Format("Failed to retrieve Animator on {0}", gameObject.name));
         }
     }
 

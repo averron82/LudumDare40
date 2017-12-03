@@ -146,7 +146,7 @@ public class Customer : MonoBehaviour
 
     void TakeMeal(Waiter waiter)
     {
-        waiter.meal = null;
+        waiter.Meal = null;
         State = CustomerState.EatingMeal;
     }
 
@@ -165,7 +165,7 @@ public class Customer : MonoBehaviour
             }
             case CustomerState.WaitingForMeal:
             {
-                return waiter.meal != null;
+                return waiter.Meal != null;
             }
         }
 
