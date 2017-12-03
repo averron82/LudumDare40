@@ -20,14 +20,14 @@ public enum CustomerState
 public class Customer : MonoBehaviour
 {
     public const float DEFAULT_MOODLET_TIME = 2.0f;
-    public const float DEFAULT_START_FOLLOW_DISTANCE = 1.0f;
+    public const float DEFAULT_START_FOLLOW_DISTANCE = 0.6f;
     public const float DEFAULT_STOP_FOLLOW_DISTANCE = 0.5f;
 
-    public float MoodAdjustWaitingToBeSeated = -0.1f;
-    public float MoodAdjustFollowingWaiterToTable = -0.1f;
+    public float MoodAdjustWaitingToBeSeated = -1f;
+    public float MoodAdjustFollowingWaiterToTable = -1f;
     public float MoodAdjustConsideringOrder = 0.0f;
-    public float MoodAdjustWaitingToPlaceOrder = -0.1f;
-    public float MoodAdjustWaitingForMeal = -0.1f;
+    public float MoodAdjustWaitingToPlaceOrder = -1f;
+    public float MoodAdjustWaitingForMeal = -1f;
     public float MoodAdjustEatingMeal = 0.0f;
 
     public float MoveSpeed = 300.0f;
@@ -42,7 +42,34 @@ public class Customer : MonoBehaviour
     public OrderBubble orderBubble;
     public Moodlet moodlet;
 
-    float Mood = 100.0f;
+    float mood = 100.0f;
+    public float Mood
+    {
+        get
+        {
+            return mood;
+        }
+
+        set
+        {
+            mood = Mathf.Clamp(value, 0.0f, 100.0f);
+
+            if (PlusOne)
+            {
+                PlusOne.Mood = value;
+            }
+
+            if (mood == 0.0f && State != CustomerState.Leaving && State != CustomerState.PlusOne)
+            {
+                moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
+                if (State == CustomerState.WaitingToBeSeated)
+                {
+                    QueueManager.Instance.RemoveCustomer(this);
+                }
+                State = CustomerState.Leaving;
+            }
+        }
+    }
 
     bool ShouldMove = false;
 
@@ -97,7 +124,7 @@ public class Customer : MonoBehaviour
                 }
                 case CustomerState.EatingMeal:
                 {
-                    StartCoroutine(EatMeal(Random.Range(10.0f, 12.0f)));
+                    StartCoroutine(EatMeal(Random.Range(8.0f, 10.0f)));
                     break;
                 }
                 case CustomerState.Leaving:
@@ -111,9 +138,13 @@ public class Customer : MonoBehaviour
 
     void Start()
     {
-        if ((state != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
+        if (State == CustomerState.Uninitialized)
         {
-            SpawnPlusOne();
+            State = CustomerState.WaitingToBeSeated;
+            if (Random.Range(0.0f, 1.0f) > 0.5f)
+            {
+                SpawnPlusOne();
+            }
         }
 
         interactive = GetComponent<Interactive>();
@@ -167,22 +198,34 @@ public class Customer : MonoBehaviour
         {
             case 3:
             {
+                Mood += 10.0f;
                 moodlet.ShowForSeconds(MoodletType.Happy, DEFAULT_MOODLET_TIME);
                 break;
             }
             case 2:
             {
-                moodlet.ShowForSeconds(MoodletType.Unhappy, DEFAULT_MOODLET_TIME);
+                Mood -= 10.0f;
+                if (Mood > 0)
+                {
+                    moodlet.ShowForSeconds(MoodletType.Unhappy, DEFAULT_MOODLET_TIME);
+                }
                 break;
             }
             default:
             {
-                moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
+                Mood -= 20.0f;
+                if (Mood > 0)
+                {
+                    moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
+                }
                 break;
             }
         }
 
-        State = CustomerState.EatingMeal;
+        if (State == CustomerState.WaitingForMeal)
+        {
+            State = CustomerState.EatingMeal;
+        }
     }
 
     bool ValidateInteraction(Waiter waiter)
@@ -247,8 +290,6 @@ public class Customer : MonoBehaviour
                 break;
             }
         }
-
-        Mood = Mathf.Clamp(Mood, 0.0f, 100.0f);
     }
 
     void FixedUpdate()
@@ -272,26 +313,62 @@ public class Customer : MonoBehaviour
         }
         else if (DistanceSq <= (StopFollowDistance * StopFollowDistance))
         {
-            ShouldMove = false;
+            if (ShouldMove)
+            {
+                ReachTarget();
+                ShouldMove = false;
+            }
         }
 
         if (ShouldMove)
         {
             Vector2 force = new Vector2(ToMoveTarget.x, ToMoveTarget.y);
 
-            // Avoid table.
-            if (table)
+            // Avoid obstacles.
+            GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+
+            GameObject nearestObstacle = null;
+            float nearestDistSq = float.MaxValue;
+            foreach (GameObject candidate in obstacles)
             {
-                Vector3 tablePosition = table.transform.position;
-                Vector3 toTable = tablePosition - Position;
-                if (toTable.sqrMagnitude < ToMoveTarget.sqrMagnitude)
+                Vector3 toCandidate = candidate.transform.position - transform.position;
+                float distSq = toCandidate.sqrMagnitude;
+                if (distSq < nearestDistSq)
                 {
-                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.45f;
+                    nearestObstacle = candidate;
+                    nearestDistSq = distSq;
+                }
+            }
+
+            if (nearestObstacle)
+            {
+                Vector3 obstaclePosition = nearestObstacle.transform.position;
+                Vector3 toObstacle = obstaclePosition - Position;
+                if (toObstacle.sqrMagnitude < ToMoveTarget.sqrMagnitude)
+                {
+                    force -= new Vector2(toObstacle.x, toObstacle.y).normalized * 0.4f;
                 }
             }
 
             force = force.normalized * MoveSpeed * Time.deltaTime;
             rigidBody.AddForce(force);
+        }
+    }
+
+    void ReachTarget()
+    {
+        switch (state)
+        {
+            case CustomerState.Leaving:
+            {
+                ScoreManager.Instance.Score += (int)(Mood / 10);
+                if (PlusOne)
+                {
+                    PlusOne.State = CustomerState.Leaving;
+                }
+                Destroy(gameObject);
+                break;
+            }
         }
     }
 
@@ -355,8 +432,12 @@ public class Customer : MonoBehaviour
         MoveTarget = Exit.transform;
         StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
         StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
-        table.SetAvailable();
-        table = null;
+
+        if (table)
+        {
+            table.SetAvailable();
+            table = null;
+        }
 
         if (PlusOne)
         {

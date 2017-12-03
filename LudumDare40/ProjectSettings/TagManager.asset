@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Exit
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -53,4 +54,7 @@ TagManager:
     locked: 0
   - name: BubbleForeground
     uniqueID: 2177145719
+    locked: 0
+  - name: UI
+    uniqueID: 2443091447
     locked: 0
