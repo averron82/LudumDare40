@@ -3,6 +3,8 @@ using UnityEngine;
 
 public enum CustomerState
 {
+    Uninitialized,
+
     WaitingToBeSeated,
     FollowingWaiterToTable,
     ConsideringOrder,
@@ -17,6 +19,7 @@ public enum CustomerState
 
 public class Customer : MonoBehaviour
 {
+    public const float DEFAULT_MOODLET_TIME = 2.0f;
     public const float DEFAULT_START_FOLLOW_DISTANCE = 1.0f;
     public const float DEFAULT_STOP_FOLLOW_DISTANCE = 0.5f;
 
@@ -32,14 +35,13 @@ public class Customer : MonoBehaviour
     public Transform MoveTarget;
     public Table table;
     public Customer PlusOne;
-    public SpriteRenderer Moodlet;
 
     public float StartFollowDistance = DEFAULT_START_FOLLOW_DISTANCE;
     public float StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
 
     public OrderBubble orderBubble;
+    public Moodlet moodlet;
 
-    CustomerState state = CustomerState.WaitingToBeSeated;
     float Mood = 100.0f;
 
     bool ShouldMove = false;
@@ -50,15 +52,26 @@ public class Customer : MonoBehaviour
 
     Rigidbody2D rigidBody;
 
+    CustomerState state = CustomerState.Uninitialized;
     public CustomerState State
     {
         get { return state; }
 
         set
         {
+            if (state == value)
+            {
+                return;
+            }
+
             state = value;
             switch (state)
             {
+                case CustomerState.WaitingToBeSeated:
+                {
+                    StartCoroutine(BecomeBoredOfWaiting(state, Random.Range(15.0f, 20.0f)));
+                    break;
+                }
                 case CustomerState.ConsideringOrder:
                 {
                     StartCoroutine(WaitToPlaceOrder(Random.Range(5.0f, 10.0f)));
@@ -66,12 +79,12 @@ public class Customer : MonoBehaviour
                 }
                 case CustomerState.WaitingToPlaceOrder:
                 {
-                    Moodlet.enabled = true;
+                    moodlet.Show(MoodletType.RequiresAttention);
                     break;
                 }
                 case CustomerState.PlacingOrder:
                 {
-                    Moodlet.enabled = false;
+                    moodlet.Hide();
                     orderBubble.Show(desiredMeal);
                     StartCoroutine(WaitForMeal(3.0f));
                     break;
@@ -79,11 +92,12 @@ public class Customer : MonoBehaviour
                 case CustomerState.WaitingForMeal:
                 {
                     orderBubble.Hide();
+                    StartCoroutine(BecomeBoredOfWaiting(state, Random.Range(15.0f, 20.0f)));
                     break;
                 }
                 case CustomerState.EatingMeal:
                 {
-                    StartCoroutine(EatMeal(Random.Range(4.0f, 6.0f)));
+                    StartCoroutine(EatMeal(Random.Range(10.0f, 12.0f)));
                     break;
                 }
                 case CustomerState.Leaving:
@@ -97,8 +111,6 @@ public class Customer : MonoBehaviour
 
     void Start()
     {
-        Moodlet.enabled = false;
-
         if ((state != CustomerState.PlusOne) && Random.Range(0.0f, 1.0f) > 0.5f)
         {
             SpawnPlusOne();
@@ -146,7 +158,28 @@ public class Customer : MonoBehaviour
 
     void TakeMeal(Waiter waiter)
     {
+        Meal meal = waiter.Meal;
         waiter.Meal = null;
+
+        switch (meal.NumCommonIngredients(desiredMeal))
+        {
+            case 3:
+            {
+                moodlet.ShowForSeconds(MoodletType.Happy, DEFAULT_MOODLET_TIME);
+                break;
+            }
+            case 2:
+            {
+                moodlet.ShowForSeconds(MoodletType.Unhappy, DEFAULT_MOODLET_TIME);
+                break;
+            }
+            default:
+            {
+                moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
+                break;
+            }
+        }
+
         State = CustomerState.EatingMeal;
     }
 
@@ -251,12 +284,38 @@ public class Customer : MonoBehaviour
                 Vector3 toTable = tablePosition - Position;
                 if (toTable.sqrMagnitude < ToMoveTarget.sqrMagnitude)
                 {
-                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.3f;
+                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.35f;
                 }
             }
 
             force = force.normalized * MoveSpeed * Time.deltaTime;
             rigidBody.AddForce(force);
+        }
+    }
+
+    IEnumerator BecomeBoredOfWaiting(CustomerState boredOfState, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        if (boredOfState == State)
+        {
+            if (Mood > 50.0f)
+            {
+                if (Random.Range(0, 2) == 0)
+                {
+                    moodlet.ShowForSeconds(MoodletType.Unhappy, DEFAULT_MOODLET_TIME);
+                }
+                else
+                {
+                    moodlet.ShowForSeconds(MoodletType.Impatient, DEFAULT_MOODLET_TIME);
+                }
+            }
+            else
+            {
+                moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
+            }
+
+            StartCoroutine(BecomeBoredOfWaiting(boredOfState, Random.Range(10.0f, 15.0f)));
         }
     }
 
