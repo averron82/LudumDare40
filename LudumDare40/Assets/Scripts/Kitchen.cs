@@ -14,6 +14,10 @@ public class Kitchen : MonoBehaviour
 {
     public KitchenMenu menu;
     public OrderBubble orderBubble;
+    public Transform chef;
+    public Sprite hatchEmpty;
+    public Sprite hatchReady;
+    public SpriteRenderer hatch;
 
     Interactive interactive;
     Waiter interactor;
@@ -37,6 +41,8 @@ public class Kitchen : MonoBehaviour
                     {
                         orderBubble.Hide();
                     }
+
+                    hatch.sprite = hatchEmpty;
                     break;
                 }
                 case KitchenState.MenuVisible:
@@ -49,12 +55,23 @@ public class Kitchen : MonoBehaviour
                 {
                     meal = menu.GetSelectedMeal();
                     menu.Hide();
+
+                    Vector3 chefPosition = chef.position;
+                    chefPosition.y -= 0.1f;
+                    chef.position = chefPosition;
+
                     StartCoroutine(CookMeal(Random.Range(2.0f, 4.0f)));
                     interactor.ReceiveInput = true;
                     break;
                 }
                 case KitchenState.WaitingForCollection:
                 {
+                    Vector3 chefPosition = chef.position;
+                    chefPosition.y += 0.1f;
+                    chef.position = chefPosition;
+
+                    hatch.sprite = hatchReady;
+
                     orderBubble.Show(meal);
                     StartCoroutine(HideOrderBubble(3.0f));
                     break;
