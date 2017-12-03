@@ -102,6 +102,14 @@ MonoBehaviour:
   MoveSpeed: 0.6
   Follower: {fileID: 0}
   ActivateDistance: 0.2
+  ReceiveInput: 1
+  meal:
+    Main:
+      sprite: {fileID: 0}
+    FirstSide:
+      sprite: {fileID: 0}
+    SecondSide:
+      sprite: {fileID: 0}
 --- !u!212 &212920474280432738
 SpriteRenderer:
   m_ObjectHideFlags: 1
