@@ -6,7 +6,6 @@ public class Character : MonoBehaviour
 {
     Rigidbody2D rigidBody;
     Animator animator;
-    SpriteRenderer spriteRenderer;
 
     void Start()
     {
@@ -23,39 +22,16 @@ public class Character : MonoBehaviour
             Debug.LogError(
                 string.Format("Failed to retrieve Animator on {0}", gameObject.name));
         }
-
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (!spriteRenderer)
-        {
-            Debug.LogError(
-                string.Format("Failed to retrieve SpriteRenderer on {0}", gameObject.name));
-        }
     }
 
     void Update ()
     {
-        if (rigidBody == null || animator == null || spriteRenderer == null)
+        if (rigidBody == null || animator == null)
         {
             return;
         }
 
         Vector2 velocity = rigidBody.velocity;
-
-        if (velocity.x < 0.0f)
-        {
-            if (!spriteRenderer.flipX)
-            {
-                spriteRenderer.flipX = true;
-            }
-        }
-        else if (velocity.x > 0.0f)
-        {
-            if (spriteRenderer.flipX)
-            {
-                spriteRenderer.flipX = false;
-            }
-        }
-
-        animator.SetFloat("Speed", velocity.magnitude);
+        animator.SetBool("Walking", velocity.sqrMagnitude > 0.1f);
     }
 }

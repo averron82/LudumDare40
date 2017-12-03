@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 4343782937982524}
   - component: {fileID: 212920474280432738}
   - component: {fileID: 95350476679569538}
-  - component: {fileID: 114533439880620924}
+  - component: {fileID: 114157398520321730}
   m_Layer: 8
   m_Name: _GFX
   m_TagString: Untagged
@@ -87,7 +87,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 10
+  m_LinearDrag: 20
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -127,6 +127,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114157398520321730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1732360282385968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27dcb20336c0cf941a858dbe5db6bb6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114211092696749228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec6b07673cb4054c8584491f925980f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 300
+  MoveSpeed: 800
   Follower: {fileID: 0}
   ActivateDistance: 0.2
   ReceiveInput: 1
