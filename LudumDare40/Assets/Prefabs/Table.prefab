@@ -207,6 +207,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Chair0: {fileID: 4674818968149548}
   Chair1: {fileID: 4943750244727594}
+  EmptyTable: {fileID: 21300000, guid: d835a306ba281644c86c530706215649, type: 3}
+  OneMeal: {fileID: 21300002, guid: d835a306ba281644c86c530706215649, type: 3}
+  TwoMeals: {fileID: 21300004, guid: d835a306ba281644c86c530706215649, type: 3}
+  tableRenderer: {fileID: 212125186762279878}
 --- !u!212 &212125186762279878
 SpriteRenderer:
   m_ObjectHideFlags: 1

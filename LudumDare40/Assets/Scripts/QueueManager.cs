@@ -66,6 +66,9 @@ public class QueueManager : MonoBehaviour
         customerAtFront.MoveTarget = waiter.transform;
         customerAtFront.State = CustomerState.FollowingWaiterToTable;
         waiter.Follower = customerAtFront.transform;
+
+        waiter.FollowMeBubble.SetActive(true);
+        StartCoroutine(ShowFollowMe(waiter, 1.0f));
     }
 
     IEnumerator ShuffleUpQueue()
@@ -76,6 +79,13 @@ public class QueueManager : MonoBehaviour
         {
             customers[0].MoveTarget = transform;
         }
+    }
+
+    IEnumerator ShowFollowMe(Waiter waiter, float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+
+        waiter.FollowMeBubble.SetActive(false);
     }
 
     bool ValidateInteraction(Waiter waiter)

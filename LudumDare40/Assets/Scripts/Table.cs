@@ -7,9 +7,16 @@ public class Table : MonoBehaviour
     public Transform Chair0;
     public Transform Chair1;
 
+    public Sprite EmptyTable;
+    public Sprite OneMeal;
+    public Sprite TwoMeals;
+    public SpriteRenderer tableRenderer;
+
     Interactive Interact;
 
     bool occupied = false;
+
+    int FoodBeingConsumed = 0;
 
     public void SetOccupied()
     {
@@ -19,6 +26,35 @@ public class Table : MonoBehaviour
     public void SetAvailable()
     {
         occupied = false;
+        SetNumberOfMealsBeingConsumed(0);
+        FoodBeingConsumed = 0;
+    }
+
+    public void IncrementFoodBeingConsumed()
+    {
+        SetNumberOfMealsBeingConsumed(++FoodBeingConsumed);
+    }
+
+    void SetNumberOfMealsBeingConsumed(int numFood)
+    {
+        switch (numFood)
+        {
+            case 0:
+            {
+                tableRenderer.sprite = EmptyTable;
+                break;
+            }
+            case 1:
+            {
+                tableRenderer.sprite = OneMeal;
+                break;
+            }
+            case 2:
+            {
+                tableRenderer.sprite = TwoMeals;
+                break;
+            }
+        }
     }
 
     void Start()
@@ -48,6 +84,17 @@ public class Table : MonoBehaviour
         }
 
         waiter.Follower = null;
+
+        waiter.BeSeatedBubble.SetActive(true);
+        StartCoroutine(ShowBeSeated(waiter, 1.0f));
+
         SetOccupied();
+    }
+
+    IEnumerator ShowBeSeated(Waiter waiter, float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+
+        waiter.BeSeatedBubble.SetActive(false);
     }
 }

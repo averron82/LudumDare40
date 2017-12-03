@@ -9,6 +9,9 @@ public class Waiter : MonoBehaviour
     public float ActivateDistance = 1.5f;
     public bool ReceiveInput = true;
 
+    public GameObject FollowMeBubble;
+    public GameObject BeSeatedBubble;
+
     Meal meal;
     public Meal Meal
     {

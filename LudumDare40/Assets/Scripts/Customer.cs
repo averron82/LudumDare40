@@ -161,6 +161,8 @@ public class Customer : MonoBehaviour
         Meal meal = waiter.Meal;
         waiter.Meal = null;
 
+        table.IncrementFoodBeingConsumed();
+
         switch (meal.NumCommonIngredients(desiredMeal))
         {
             case 3:
@@ -338,6 +340,13 @@ public class Customer : MonoBehaviour
         yield return new WaitForSeconds(Seconds);
 
         State = CustomerState.Leaving;
+    }
+
+    IEnumerator ShowFollowMe(Waiter waiter, float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+
+        waiter.FollowMeBubble.SetActive(false);
     }
 
     void Leave()
