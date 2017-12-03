@@ -251,7 +251,7 @@ public class Customer : MonoBehaviour
                 Vector3 toTable = tablePosition - Position;
                 if (toTable.sqrMagnitude < ToMoveTarget.sqrMagnitude)
                 {
-                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.2f;
+                    force -= new Vector2(toTable.x, toTable.y).normalized * 0.3f;
                 }
             }
 
