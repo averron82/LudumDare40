@@ -14,6 +14,28 @@ public class Meal
     public Ingredient Main;
     public Ingredient FirstSide;
     public Ingredient SecondSide;
+
+    public int NumCommonIngredients(Meal other)
+    {
+        int result = 0;
+
+        if (Main == other.Main)
+        {
+            ++result;
+        }
+
+        if (FirstSide == other.FirstSide)
+        {
+            ++result;
+        }
+
+        if (SecondSide == other.SecondSide)
+        {
+            ++result;
+        }
+
+        return result;
+    }
 };
 
 public class MealManager : MonoBehaviour
