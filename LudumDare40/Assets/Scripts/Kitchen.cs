@@ -13,6 +13,7 @@ public enum KitchenState
 public class Kitchen : MonoBehaviour
 {
     public KitchenMenu menu;
+    public OrderBubble orderBubble;
 
     Interactive interactive;
     Waiter interactor;
@@ -30,6 +31,14 @@ public class Kitchen : MonoBehaviour
 
             switch (state)
             {
+                case KitchenState.WaitingForOrder:
+                {
+                    if (orderBubble.IsVisible())
+                    {
+                        orderBubble.Hide();
+                    }
+                    break;
+                }
                 case KitchenState.MenuVisible:
                 {
                     interactor.ReceiveInput = false;
@@ -42,6 +51,12 @@ public class Kitchen : MonoBehaviour
                     menu.Hide();
                     StartCoroutine(CookMeal(Random.Range(2.0f, 4.0f)));
                     interactor.ReceiveInput = true;
+                    break;
+                }
+                case KitchenState.WaitingForCollection:
+                {
+                    orderBubble.Show(meal);
+                    StartCoroutine(HideOrderBubble(3.0f));
                     break;
                 }
             }
@@ -69,6 +84,7 @@ public class Kitchen : MonoBehaviour
             case KitchenState.WaitingForCollection:
             {
                 waiter.Meal = meal;
+                meal = null;
                 State = KitchenState.WaitingForOrder;
                 break;
             }
@@ -102,5 +118,15 @@ public class Kitchen : MonoBehaviour
         yield return new WaitForSeconds(seconds);
 
         State = KitchenState.WaitingForCollection;
+    }
+
+    IEnumerator HideOrderBubble(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        if (orderBubble.IsVisible())
+        {
+            orderBubble.Hide();
+        }
     }
 }

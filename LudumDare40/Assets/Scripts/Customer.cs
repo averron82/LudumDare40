@@ -73,7 +73,7 @@ public class Customer : MonoBehaviour
                 {
                     Moodlet.enabled = false;
                     orderBubble.Show(desiredMeal);
-                    StartCoroutine(WaitForMeal(Random.Range(1.0f, 3.0f)));
+                    StartCoroutine(WaitForMeal(3.0f));
                     break;
                 }
                 case CustomerState.WaitingForMeal:
