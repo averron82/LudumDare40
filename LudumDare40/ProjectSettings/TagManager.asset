@@ -14,8 +14,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Characters
+  - Furniture
   - 
   - 
   - 
@@ -47,4 +47,10 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2426539597
+    locked: 0
+  - name: BubbleBackground
+    uniqueID: 1617171793
+    locked: 0
+  - name: BubbleForeground
+    uniqueID: 2177145719
     locked: 0
