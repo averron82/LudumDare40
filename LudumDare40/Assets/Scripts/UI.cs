@@ -15,6 +15,7 @@ public class UI : MonoBehaviour
     public GameObject logo;
     public GameObject instructions;
     public GameObject score;
+    public GameObject fade;
 
     public float instructionTime = 2.0f;
 
@@ -37,6 +38,7 @@ public class UI : MonoBehaviour
                         logo.SetActive(true);
                         instructions.SetActive(false);
                         score.SetActive(false);
+                        fade.SetActive(true);
                         Time.timeScale = 0.0f;
                         break;
                     }
@@ -45,6 +47,7 @@ public class UI : MonoBehaviour
                         logo.SetActive(false);
                         instructions.SetActive(true);
                         score.SetActive(false);
+                        fade.SetActive(true);
                         Time.timeScale = 0.0f;
                         StartCoroutine(HideInstructions(instructionTime));
                         break;
@@ -54,6 +57,7 @@ public class UI : MonoBehaviour
                         logo.SetActive(false);
                         instructions.SetActive(false);
                         score.SetActive(true);
+                        fade.SetActive(false);
                         Time.timeScale = 1.0f;
                         break;
                     }
