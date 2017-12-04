@@ -95,6 +95,7 @@ public class Customer : MonoBehaviour
     Meal desiredMeal;
 
     Rigidbody2D rigidBody;
+    CircleCollider2D collider;
     AudioSource audioSource;
 
     CustomerState state = CustomerState.Uninitialized;
@@ -178,6 +179,13 @@ public class Customer : MonoBehaviour
         {
             Debug.LogError(
                 string.Format("Failed to retrieve RigidBody2D on {0}", gameObject.name));
+        }
+
+        collider = GetComponent<CircleCollider2D>();
+        if (!collider)
+        {
+            Debug.LogError(
+                string.Format("Failed to retrieve CircleCollider2D on {0}", gameObject.name));
         }
 
         audioSource = GetComponent<AudioSource>();
@@ -473,5 +481,14 @@ public class Customer : MonoBehaviour
             PlusOne.StopFollowDistance = DEFAULT_STOP_FOLLOW_DISTANCE;
             PlusOne.table = null;
         }
+
+        StartCoroutine(DisableCollision(15.0f));
+    }
+
+    IEnumerator DisableCollision(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        collider.enabled = false;
     }
 }
