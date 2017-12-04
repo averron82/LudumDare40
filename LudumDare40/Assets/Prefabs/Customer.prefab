@@ -538,11 +538,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72eb7c4510f98a40ba52601217d5377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoodAdjustWaitingToBeSeated: -2
+  MoodAdjustWaitingToBeSeated: -1.5
   MoodAdjustFollowingWaiterToTable: 0
   MoodAdjustConsideringOrder: 0
-  MoodAdjustWaitingToPlaceOrder: -2
-  MoodAdjustWaitingForMeal: -2
+  MoodAdjustWaitingToPlaceOrder: -1.5
+  MoodAdjustWaitingForMeal: -1.5
   MoodAdjustEatingMeal: 0
   MoveSpeed: 300
   MoveTarget: {fileID: 0}
