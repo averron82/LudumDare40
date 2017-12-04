@@ -6,13 +6,17 @@ public enum UIState
 {
     Uninitialized,
     Logo,
+    Instructions,
     Gameplay
 }
 
 public class UI : MonoBehaviour
 {
     public GameObject logo;
+    public GameObject instructions;
     public GameObject score;
+
+    public float instructionTime = 2.0f;
 
     UIState state = UIState.Uninitialized;
 
@@ -31,13 +35,24 @@ public class UI : MonoBehaviour
                     case UIState.Logo:
                     {
                         logo.SetActive(true);
+                        instructions.SetActive(false);
                         score.SetActive(false);
                         Time.timeScale = 0.0f;
+                        break;
+                    }
+                    case UIState.Instructions:
+                    {
+                        logo.SetActive(false);
+                        instructions.SetActive(true);
+                        score.SetActive(false);
+                        Time.timeScale = 0.0f;
+                        StartCoroutine(HideInstructions(instructionTime));
                         break;
                     }
                     case UIState.Gameplay:
                     {
                         logo.SetActive(false);
+                        instructions.SetActive(false);
                         score.SetActive(true);
                         Time.timeScale = 1.0f;
                         break;
@@ -60,10 +75,28 @@ public class UI : MonoBehaviour
             {
                 if (Input.anyKeyDown)
                 {
-                        State = UIState.Gameplay;
+                    State = UIState.Instructions;
                 }
                 break;
             }
+            case UIState.Instructions:
+            {
+                if (Input.anyKeyDown)
+                {
+                    State = UIState.Gameplay;
+                }
+                break;
+            }
+        }
+    }
+
+    IEnumerator HideInstructions(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+
+        if (State == UIState.Instructions)
+        {
+            State = UIState.Gameplay;
         }
     }
 }
