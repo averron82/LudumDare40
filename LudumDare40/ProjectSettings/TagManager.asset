@@ -52,9 +52,6 @@ TagManager:
   - name: BubbleBackground
     uniqueID: 1617171793
     locked: 0
-  - name: BubbleForeground
-    uniqueID: 2177145719
-    locked: 0
   - name: UI
     uniqueID: 2443091447
     locked: 0
