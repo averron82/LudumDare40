@@ -19,6 +19,22 @@ public enum CustomerState
 
 public class Customer : MonoBehaviour
 {
+    public static int NumInState(CustomerState state)
+    {
+        int result = 0;
+
+        Customer[] customers = FindObjectsOfType<Customer>();
+        foreach (Customer customer in customers)
+        {
+            if (customer.State == state)
+            {
+                ++result;
+            }
+        }
+
+        return result;
+    }
+
     public const float DEFAULT_MOODLET_TIME = 2.0f;
     public const float DEFAULT_START_FOLLOW_DISTANCE = 0.6f;
     public const float DEFAULT_STOP_FOLLOW_DISTANCE = 0.5f;

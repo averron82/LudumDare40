@@ -37,6 +37,7 @@ public class Kitchen : MonoBehaviour
             {
                 case KitchenState.WaitingForOrder:
                 {
+                    meal = null;
                     if (orderBubble.IsVisible())
                     {
                         orderBubble.Hide();
@@ -87,6 +88,14 @@ public class Kitchen : MonoBehaviour
         State = KitchenState.WaitingForOrder;
     }
 
+    void Update()
+    {
+        if (State == KitchenState.WaitingForCollection && Customer.NumInState(CustomerState.WaitingForMeal) == 0)
+        {
+            State = KitchenState.WaitingForOrder;
+        }
+    }
+
     void Interact(Waiter waiter)
     {
         interactor = waiter;
@@ -101,7 +110,6 @@ public class Kitchen : MonoBehaviour
             case KitchenState.WaitingForCollection:
             {
                 waiter.Meal = meal;
-                meal = null;
                 State = KitchenState.WaitingForOrder;
                 break;
             }
@@ -119,7 +127,7 @@ public class Kitchen : MonoBehaviour
         {
             case KitchenState.WaitingForOrder:
             {
-                return true;
+                return Customer.NumInState(CustomerState.WaitingForMeal) > 0;
             }
             case KitchenState.WaitingForCollection:
             {

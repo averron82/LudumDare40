@@ -21,7 +21,7 @@ public class ScoreManager : MonoBehaviour
         set
         {
             score = Mathf.Clamp(value, 0, 999);
-            tips.text = "Tips: " + score;
+            tips.text = "" + score;
         }
     }
 

@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class Table : MonoBehaviour
 {
+    public static int NumAvailable()
+    {
+        int result = 0;
+
+        Table[] tables = FindObjectsOfType<Table>();
+        foreach (Table table in tables)
+        {
+            if (!table.occupied)
+            {
+                ++result;
+            }
+        }
+
+        return result;
+    }
+
     public Transform Chair0;
     public Transform Chair1;
 

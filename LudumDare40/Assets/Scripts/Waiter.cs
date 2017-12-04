@@ -56,6 +56,11 @@ public class Waiter : MonoBehaviour
                 Interact();
             }
         }
+
+        if (Meal != null && Customer.NumInState(CustomerState.WaitingForMeal) == 0)
+        {
+            Meal = null;
+        }
     }
 
     void FixedUpdate()

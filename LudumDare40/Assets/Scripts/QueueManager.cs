@@ -41,7 +41,7 @@ public class QueueManager : MonoBehaviour
         TimeElapsed += Time.deltaTime;
         TimeUntilSpawn -= Time.deltaTime;
 
-        if (TimeUntilSpawn <= 0.0f)
+        if (TimeUntilSpawn <= 0.0f && Table.NumAvailable() > 0)
         {
             SpawnCustomer();
 
