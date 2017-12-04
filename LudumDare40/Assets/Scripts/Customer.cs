@@ -165,7 +165,7 @@ public class Customer : MonoBehaviour
 
     void SpawnPlusOne()
     {
-        PlusOne = Instantiate(this, transform.position, Quaternion.identity);
+        PlusOne = CustomerFactory.Instance.CreateCustomer(transform.position);
         PlusOne.MoveTarget = transform;
         PlusOne.state = CustomerState.PlusOne;
     }

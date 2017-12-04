@@ -7,7 +7,7 @@ public class DepthSort : MonoBehaviour
     void Update()
     {
         Vector3 position = transform.position;
-        position.z = position.y;
+        position.z = transform.parent.transform.position.y;
         transform.position = position;
     }
 }

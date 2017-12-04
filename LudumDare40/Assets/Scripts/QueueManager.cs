@@ -11,7 +11,6 @@ public class QueueManager : MonoBehaviour
         set { instance = value; }
     }
 
-    public Customer CustomerPrefab;
     public float CustomerSpawnInterval = 10.0f;
     public Transform CustomerSpawnPosition;
 
@@ -47,7 +46,7 @@ public class QueueManager : MonoBehaviour
             return;
         }
 
-        Customer NewCustomer = Instantiate(CustomerPrefab, CustomerSpawnPosition.position, Quaternion.identity);
+        Customer NewCustomer = CustomerFactory.Instance.CreateCustomer(CustomerSpawnPosition.position);
 
         if (customers.Count == 0)
         {
