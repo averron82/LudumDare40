@@ -3170,6 +3170,11 @@ Prefab:
       propertyPath: CustomerSpawnPosition
       value: 
       objectReference: {fileID: 885414524}
+    - target: {fileID: 114397274351303946, guid: 92756446ef4b7b341a86fd7a38d85368,
+        type: 2}
+      propertyPath: InitialSpawnDelay
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 92756446ef4b7b341a86fd7a38d85368, type: 2}
   m_IsPrefabParent: 0

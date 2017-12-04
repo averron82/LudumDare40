@@ -11,10 +11,16 @@ public class QueueManager : MonoBehaviour
         set { instance = value; }
     }
 
-    public float CustomerSpawnInterval = 10.0f;
+    public float InitialSpawnDelay = 3.0f;
+    public float MinSpawnInterval = 10.0f;
+    public float MaxSpawnInterval = 20.0f;
+    public float ReachMinSpawnIntervalAfterSeconds = 240.0f;
+
     public Transform CustomerSpawnPosition;
 
     public List<Customer> customers = new List<Customer>();
+
+    float TimeElapsed;
     float TimeUntilSpawn;
 
     Interactive interactive;
@@ -24,18 +30,22 @@ public class QueueManager : MonoBehaviour
         interactive = GetComponent<Interactive>();
         interactive.SetInteraction(AcquireCustomerFromQueue, ValidateInteraction);
 
-        TimeUntilSpawn = CustomerSpawnInterval;
+        TimeElapsed = 0.0f;
+        TimeUntilSpawn = InitialSpawnDelay;
 
         Instance = this;
     }
 
     void Update()
     {
+        TimeElapsed += Time.deltaTime;
         TimeUntilSpawn -= Time.deltaTime;
+
         if (TimeUntilSpawn <= 0.0f)
         {
             SpawnCustomer();
-            TimeUntilSpawn = CustomerSpawnInterval;
+
+            TimeUntilSpawn = Mathf.Lerp(MaxSpawnInterval, MinSpawnInterval, TimeElapsed / ReachMinSpawnIntervalAfterSeconds);
         }
     }
 

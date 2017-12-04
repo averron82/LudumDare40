@@ -20,11 +20,21 @@ public class CustomerFactory : MonoBehaviour
             return null;
         }
 
-        return Instantiate<Customer>(Prefabs[Random.Range(0, Prefabs.Count)], position, Quaternion.identity);
+        int Index = Random.Range(0, Prefabs.Count);
+        if (Index == LastIndex)
+        {
+            Index = Random.Range(0, Prefabs.Count);
+        }
+        LastIndex = Index;
+
+        return Instantiate<Customer>(Prefabs[Index], position, Quaternion.identity);
     }
+
+    int LastIndex = -1;
 
     void Start()
     {
         Instance = this;
+        LastIndex = -1;
     }
 }
