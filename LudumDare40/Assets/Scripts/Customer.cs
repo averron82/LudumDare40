@@ -77,6 +77,7 @@ public class Customer : MonoBehaviour
 
             if (mood == 0.0f && State != CustomerState.Leaving && State != CustomerState.PlusOne)
             {
+                audioSource.Play();
                 moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
                 if (State == CustomerState.WaitingToBeSeated)
                 {
@@ -94,6 +95,7 @@ public class Customer : MonoBehaviour
     Meal desiredMeal;
 
     Rigidbody2D rigidBody;
+    AudioSource audioSource;
 
     CustomerState state = CustomerState.Uninitialized;
     public CustomerState State
@@ -177,6 +179,13 @@ public class Customer : MonoBehaviour
             Debug.LogError(
                 string.Format("Failed to retrieve RigidBody2D on {0}", gameObject.name));
         }
+
+        audioSource = GetComponent<AudioSource>();
+        if (!audioSource)
+        {
+            Debug.LogError(
+                string.Format("Failed to retrieve AudioSource on {0}", gameObject.name));
+        }
     }
 
     void SpawnPlusOne()
@@ -232,6 +241,7 @@ public class Customer : MonoBehaviour
                 Mood -= 20.0f;
                 if (Mood > 0)
                 {
+                    audioSource.Play();
                     moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
                 }
                 break;
@@ -407,6 +417,7 @@ public class Customer : MonoBehaviour
             }
             else
             {
+                audioSource.Play();
                 moodlet.ShowForSeconds(MoodletType.Angry, DEFAULT_MOODLET_TIME);
             }
 
