@@ -112,7 +112,7 @@ public class Customer : MonoBehaviour
                 case CustomerState.PlacingOrder:
                 {
                     moodlet.Hide();
-                    orderBubble.Show(desiredMeal);
+                    orderBubble.Show(desiredMeal, gameObject.transform.position.x > 0.5f);
                     StartCoroutine(WaitForMeal(3.0f));
                     break;
                 }
