@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class QueueManager : MonoBehaviour
 {
+    static QueueManager instance;
+    public static QueueManager Instance
+    {
+        get { return instance; }
+        set { instance = value; }
+    }
+
     public Customer CustomerPrefab;
     public float CustomerSpawnInterval = 10.0f;
     public Transform CustomerSpawnPosition;
@@ -19,6 +26,8 @@ public class QueueManager : MonoBehaviour
         interactive.SetInteraction(AcquireCustomerFromQueue, ValidateInteraction);
 
         TimeUntilSpawn = CustomerSpawnInterval;
+
+        Instance = this;
     }
 
     void Update()
@@ -69,6 +78,19 @@ public class QueueManager : MonoBehaviour
 
         waiter.FollowMeBubble.SetActive(true);
         StartCoroutine(ShowFollowMe(waiter, 1.0f));
+    }
+
+    public void RemoveCustomer(Customer customer)
+    {
+        foreach (Customer other in customers)
+        {
+            if (other.MoveTarget == customer.transform)
+            {
+                other.MoveTarget = customer.MoveTarget;
+            }
+        }
+
+        customers.Remove(customer);
     }
 
     IEnumerator ShuffleUpQueue()
