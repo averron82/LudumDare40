@@ -6,7 +6,7 @@ public class Waiter : MonoBehaviour
 {
     public float MoveSpeed = 300.0f;
     public Transform Follower;
-    public float ActivateDistance = 1.5f;
+    public float ActivateDistance = 1.6f;
     public bool ReceiveInput = true;
 
     public GameObject FollowMeBubble;

@@ -127,7 +127,7 @@ public class Kitchen : MonoBehaviour
         {
             case KitchenState.WaitingForOrder:
             {
-                return Customer.NumInState(CustomerState.WaitingForMeal) > 0;
+                return Customer.NumInState(CustomerState.PlacingOrder) > 0 || Customer.NumInState(CustomerState.WaitingForMeal) > 0;
             }
             case KitchenState.WaitingForCollection:
             {
